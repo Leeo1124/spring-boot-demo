@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration debug="false">
+	<!-- 定义日志文件的存储地址 -->
+	<property name="LOG_HOME" value="logs" />
+    <!-- 控制台 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+        	<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度，%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!-- 按照每天生成日志文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <!-- log.dir 在maven profile里配置 -->
+            <fileNamePattern>${LOG_HOME}/test-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 日志最大的历史 60天 -->
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+        <!--日志文件最大的大小-->
+       <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+         <MaxFileSize>10MB</MaxFileSize>
+       </triggeringPolicy>
+    </appender>
+    
+    <!-- 日志异步到数据库  
+    <appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
+        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+           <dataSource class="com.mchange.v2.c3p0.ComboPooledDataSource">
+              <driverClass>com.mysql.jdbc.Driver</driverClass>
+              <url>jdbc:mysql://127.0.0.1:3306/oasis</url>
+              <user>root</user>
+              <password>123456</password>
+            </dataSource>
+        </connectionSource>
+  	</appender> 
+  	-->
+
+    <!-- 日志输出级别 -->
+    <root level="INFO">   
+        <appender-ref ref="STDOUT" />   
+        <appender-ref ref="FILE" />   
+    </root>
+
+	<!-- 将控制com.leeo包下的所有类的日志的打印, 日志输出级别 DEBUG(additivity属性为false，表示此loger的打印信息不再向上级传递) -->
+    <logger name="com.leeo" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    
+	<!--JdbcTemplate的日志输出器 -->
+    <logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="TRACE" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="org.springframework.jdbc.core" level="DEBUG" additivity="true">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="java.sql.Connection" level="DEBUG" additivity="true">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="java.sql.Statement" level="DEBUG" additivity="true">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="java.sql.PreparedStatement" level="DEBUG" additivity="true">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="java.sql.ResultSet" level="DEBUG" additivity="true">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+	<logger name="org.springframework.boot" level="DEBUG"/>
+	<logger name="org.springframework.web" level="DEBUG"/>
+	<logger name="org.hibernate" level="DEBUG"/>
+
+</configuration>

@@ -1,0 +1,94 @@
+<div th:fragment="sidebar" class="sidebar" id="sidebar">
+	<script type="text/javascript">
+		try {
+			ace.settings.check('sidebar', 'fixed')
+		} catch (e) {
+		}
+	</script>
+
+	<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+		<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+			<button class="btn btn-success">
+				<i class="icon-signal"></i>
+			</button>
+
+			<button class="btn btn-info">
+				<i class="icon-pencil"></i>
+			</button>
+
+			<button class="btn btn-warning">
+				<i class="icon-group"></i>
+			</button>
+
+			<button class="btn btn-danger">
+				<i class="icon-cogs"></i>
+			</button>
+		</div>
+
+		<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+			<span class="btn btn-success"></span> <span class="btn btn-info"></span>
+
+			<span class="btn btn-warning"></span> <span class="btn btn-danger"></span>
+		</div>
+	</div>
+	<!-- #sidebar-shortcuts -->
+
+	<ul class="nav nav-list" th:each="resource : ${resources}">
+		<shiro:hasAnyPermissions name="${resource.identity}+':view'">
+		<li>
+			<a th:href="@{${resource.url}}" href="#" th:class="${resource.hasChildren and resource.isRoot()} ? 'dropdown-toggle'">
+				<i th:class="${resource.icon} == null? 'icon-desktop' : ${resource.icon}"></i>
+				<span class="menu-text" th:text="${resource.name}"> 一级菜单 </span>
+				<b th:if="${resource.hasChildren and resource.isRoot()}" class="arrow icon-angle-down"></b>
+			</a>
+			<ul class="submenu" th:if="${resource.hasChildren}">
+				<li th:each="children : ${resource.childrenResource}">
+					<shiro:hasAnyPermissions name="${resource.identity}+':'+${children.identity}+':view'">
+					<a th:href="@{${children.url}}" href="#" th:class="${children.hasChildren} ? 'dropdown-toggle'">
+						<i class="icon-double-angle-right"></i>
+						<span th:text="${children.name}">二级菜单</span>
+						<b th:if="${children.hasChildren}" class="arrow icon-angle-down"></b>
+					</a>
+					<ul class="submenu" th:if="${children.hasChildren}">
+						<li th:each="children2 : ${children.childrenResource}">
+							<shiro:hasAnyPermissions name="${resource.identity}+':'+${children.identity}+':'+${children2.identity}+':view'">
+							<a th:href="@{${children2.url}}" href="#" th:class="${children2.hasChildren} ? 'dropdown-toggle'">
+								<i class="icon-leaf"></i>
+								<span th:text="${children2.name}">三级菜单</span>
+								<b th:if="${children2.hasChildren}" class="arrow icon-angle-down"></b>
+							</a>
+							<ul class="submenu" th:if="${children2.hasChildren}">
+								<li th:each="children3 : ${children2.childrenResource}">
+									<shiro:hasAnyPermissions name="${resource.identity}+':'+${children.identity}+':'+${children2.identity}+':'+${children3.identity}+':view'">
+									<a th:href="@{${children3.url}}" href="#">
+										<i class="icon-plus"></i>
+										<span th:text="${children3.name}">四级菜单</span>
+									</a>
+									</shiro:hasAnyPermissions>
+								</li>
+							</ul>
+							</shiro:hasAnyPermissions>
+						</li>
+					</ul>
+					</shiro:hasAnyPermissions>
+				</li>
+			</ul>
+			
+		</li>
+		</shiro:hasAnyPermissions>
+		
+	</ul>
+	<!-- /.nav-list -->
+
+	<div class="sidebar-collapse" id="sidebar-collapse">
+		<i class="icon-double-angle-left" data-icon1="icon-double-angle-left"
+			data-icon2="icon-double-angle-right"></i>
+	</div>
+
+	<script type="text/javascript">
+		try {
+			ace.settings.check('sidebar', 'collapsed')
+		} catch (e) {
+		}
+	</script>
+</div>

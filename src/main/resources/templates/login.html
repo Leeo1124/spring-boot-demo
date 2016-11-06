@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+<meta charset="utf-8" />
+<title>用户登录</title>
+<link rel="stylesheet" href="plug-in/ace/css/bootstrap.min.css" />
+<link rel="stylesheet" href="plug-in/ace/css/font-awesome.min.css" />
+<link rel="stylesheet" href="plug-in/ace/css/ace.min.css" />
+</head>
+<body>
+<body class="login-layout">
+	<div class="main-container">
+		<div class="main-content">
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1">
+					<div class="login-container">
+					
+						<div class="center">
+							<h1>
+								<i class="icon-leaf green"></i> <span class="red">OASIS</span> <span
+									class="white">信息管理系统</span>
+							</h1>
+							 
+							<h4 class="blue">&nbsp;&nbsp;&nbsp;&nbsp;</h4>
+						</div>
+
+						<div class="space-6"></div>
+
+						<div class="position-relative">
+							<div id="login-box"
+								class="login-box visible widget-box no-border">
+								<div class="widget-body">
+									<div class="widget-main">
+										<h4 class="header blue lighter bigger">
+											<i class="icon-coffee green"></i>用户登录
+										</h4>
+
+										<div class="space-6"></div>
+										<form id="loginForm" class="form-signin" role="form" th:action="@{/login}"
+											th:object="${user}" action="#" method="post" onsubmit="return checkUser();" >
+											<div class="alert alert-danger alert-dismissible"
+												role="alert" id="errMsgContiner">
+												<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+												<div id="showErrMsg"></div>
+											</div>
+											<div class="alert alert-danger alert-dismissible" role="alert" th:if="${message}!=null" id="errMsgContiner2">
+												<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+												[[${message}]]
+											</div>
+											<div class="form-group"
+												th:class="${#fields.hasErrors('*{username}')} ? 'has-error'">
+												<label class="control-label" for="usernameError"
+													th:if="${#fields.hasErrors('username')}"
+													th:errors="*{username}">UserName error</label> <span
+													class="block input-icon input-icon-right"> <input id="username" name="username"
+													type="text" class="form-control" placeholder="用户名"
+													th:field="*{username}"> <i class="icon-user"></i>
+												</span>
+											</div>
+											<br>
+											<div class="form-group"
+												th:class="${#fields.hasErrors('*{password}')} ? 'has-error'">
+												<label class="control-label" for="passwordError"
+													th:if="${#fields.hasErrors('password')}"
+													th:errors="*{password}">Password error</label> <span
+													class="block input-icon input-icon-right"><input id="password" name="password"
+													type="password" class="form-control" placeholder="密    码"
+													th:field="*{password}"><i class="icon-lock"></i> </span>
+											</div>
+											<div class="checkbox">
+												<label> <input type="checkbox" name="rememberMe" value="true" />
+													记住用户名
+												</label>
+											</div>
+											<button id="but_login" class="btn btn-lg btn-primary btn-block"
+												type="submit">登&nbsp;&nbsp;录</button>
+										</form>
+										<!-- 
+										<div class="social-or-login center">
+											<span class="bigger-110">Or Login Using</span>
+										</div>
+										 
+										<div class="social-login center">
+											<a class="btn btn-primary"> <i class="icon-facebook"></i>
+											</a> <a class="btn btn-info"> <i class="icon-twitter"></i>
+											</a> <a class="btn btn-danger"> <i class="icon-google-plus"></i>
+											</a>
+										</div>
+										-->
+									</div>
+									<!-- /widget-main -->
+									<!--  
+									<div class="toolbar clearfix">
+										<div>
+											<a href="#" onclick="show_box('forgot-box'); return false;"
+												class="forgot-password-link"> <i class="icon-arrow-left"></i>
+												I forgot my password
+											</a>
+										</div>
+										<div>
+											<a href="#" onclick="show_box('signup-box'); return false;"
+												class="user-signup-link"> I want to register <i
+												class="icon-arrow-right"></i>
+											</a>
+										</div>
+									</div>
+									-->
+								</div>
+								<!-- /widget-body -->
+								<div class="center">
+									<h4 class="blue" id="id-company-text">Copyright &copy; 2016 Leeo</h4>
+								</div>
+							</div>
+							<!-- /login-box -->
+<script type="text/javascript" src="plug-in/jquery/jquery-2.2.0.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	optErrMsg();
+});
+$("#errMsgContiner").hide();
+function optErrMsg(){
+	$("#showErrMsg").html('');
+	$("#errMsgContiner").hide();
+}
+
+//输入验证码，回车登录
+$(document).keydown(function(e){
+	if(e.keyCode == 13) {
+		$("#but_login").click();
+	}
+});
+
+//验证用户信息
+function checkUser(){
+	$("#errMsgContiner2").hide();
+    if(!validForm()){
+    	return false;
+   }
+}
+
+//表单验证
+function validForm(){
+  if($.trim($("#username").val()).length==0){
+    showErrorMsg("请输入用户名");
+    return false;
+  }
+
+  if($.trim($("#password").val()).length==0){
+    showErrorMsg("请输入密码");
+    return false;
+  }
+
+  return true;
+}
+
+//点击消息关闭提示
+$('#alertMessage').click(function() {
+	hideTop();
+});
+
+//登录提示消息显示
+function showErrorMsg(msg){
+  $("#errMsgContiner").show();
+  $("#showErrMsg").html(msg);
+  //window.setTimeout(optErrMsg,3000); 
+}
+function hideTop() {
+	$('#alertMessage').animate({
+		opacity : 0,
+		right : '-20'
+	}, 500, function() {
+		$(this).hide();
+	});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+<meta charset="utf-8" />
+<title>用户登录</title>
+<link rel="stylesheet" th:href="@{/plug-in/bootstrap/3.3.0/css/bootstrap.min.css}" href="../../plug-in/bootstrap/3.3.0/css/bootstrap.min.css" />
+<style type="text/css">
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+</style>
+</head>
+<body>
+	<div class="container">
+			<form class="form-signin" role="form" th:action="@{/login}" th:object="${user}" action="#" method="post" onsubmit="return checkUser();">
+				<h2 class="form-signin-heading">
+					OASIS信息管理系统
+				</h2>
+				<div class="alert alert-danger alert-dismissible" role="alert" id="errMsgContiner">
+					<button type="button" class="close" data-dismiss="alert">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<div id="showErrMsg"></div>
+				</div>
+				<div class="alert alert-danger alert-dismissible" role="alert" th:if="${message}!=null" id="errMsgContiner2">
+					<button type="button" class="close" data-dismiss="alert">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					[[${message}]]
+				</div>
+				<div class="form-group" th:class="${#fields.hasErrors('*{username}')} ? 'has-error'">
+					<label class="control-label" for="usernameError" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">UserName error</label>
+					<input id="username" name="username" type="text" class="form-control" placeholder="用户名" th:field="*{username}">
+				</div><br>
+				<div class="form-group" th:class="${#fields.hasErrors('*{password}')} ? 'has-error'">
+					<label class="control-label" for="passwordError"  th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</label>
+					<input id="password" name="password" type="password" class="form-control" placeholder="密    码" th:field="*{password}">
+				</div>
+				<div class="checkbox">
+		        	<label>
+		            	<input type="checkbox" name="rememberMe" value="true" /> 记住用户名
+		        	</label>
+		        </div>
+				<button id="but_login" class="btn btn-lg btn-primary btn-block" type="submit">登&nbsp;&nbsp;录</button>
+			</form>
+	</div>
+<script th:src="@{/plug-in/jquery/2.2.0/jquery-2.2.0.min.js}" src="../../plug-in/jquery/2.2.0/jquery-2.2.0.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	optErrMsg();
+});
+$("#errMsgContiner").hide();
+function optErrMsg(){
+	$("#showErrMsg").html('');
+	$("#errMsgContiner").hide();
+}
+
+//输入验证码，回车登录
+$(document).keydown(function(e){
+	if(e.keyCode == 13) {
+		$("#but_login").click();
+	}
+});
+
+//验证用户信息
+function checkUser(){
+	$("#errMsgContiner2").hide();
+    if(!validForm()){
+    	return false;
+   }
+}
+
+//表单验证
+function validForm(){
+  if($.trim($("#username").val()).length==0){
+    showErrorMsg("请输入用户名");
+    return false;
+  }
+
+  if($.trim($("#password").val()).length==0){
+    showErrorMsg("请输入密码");
+    return false;
+  }
+
+  return true;
+}
+
+//点击消息关闭提示
+$('#alertMessage').click(function() {
+	hideTop();
+});
+
+//登录提示消息显示
+function showErrorMsg(msg){
+  $("#errMsgContiner").show();
+  $("#showErrMsg").html(msg);
+  //window.setTimeout(optErrMsg,3000); 
+}
+function hideTop() {
+	$('#alertMessage').animate({
+		opacity : 0,
+		right : '-20'
+	}, 500, function() {
+		$(this).hide();
+	});
+}
+</script>
+</body>
+</html>

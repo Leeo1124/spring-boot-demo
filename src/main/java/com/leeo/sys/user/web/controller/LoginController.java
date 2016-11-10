@@ -29,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.common.collect.Lists;
 import com.leeo.cache.RedisCache;
+import com.leeo.common.entity.enums.SysThemesEnum;
 import com.leeo.common.utils.UserLogUtils;
 import com.leeo.sys.resource.entity.Menu;
 import com.leeo.sys.resource.service.ResourceService;
@@ -55,6 +56,8 @@ public class LoginController {
 	
 	@Value(value = "${user.password.maxRetryCount}")
     private int maxRetryCount = 10;
+	
+	private String path = SysThemesEnum.BOOTSTRAP_STYLE.getIndexPath();
 
     public void setMaxRetryCount(int maxRetryCount) {
         this.maxRetryCount = maxRetryCount;
@@ -68,7 +71,7 @@ public class LoginController {
 //		}
 		model.addAttribute("user", new User());
 		
-		return "login";
+		return path+"login";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -202,7 +205,7 @@ public class LoginController {
 	@RequestMapping("/admin/index")
 	public String index(Model model) {
 
-		return "admin/index";
+		return path+"index";
 	}
 	
 	@RequestMapping(value="/admin/menu/{id}", method = RequestMethod.GET)

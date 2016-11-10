@@ -1,0 +1,41 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="admin/layout/layout">
+<head>
+<meta charset="utf-8" />
+<title>用户管理 - 创建用户</title>
+</head>
+<body>
+	<div layout:fragment="header">
+		<h1>
+			用户管理 <small> <i class="icon-double-angle-right"></i> 创建用户
+			</small>
+		</h1>
+	</div>
+	<div layout:fragment="content">
+		<div class="alert alert-success" th:if="${globalMessage}"
+			th:text="${globalMessage}">Some Success user</div>
+		<div class="pull-right">
+			<a th:href="@{/admin/user}" href="list.html"> Users </a>
+		</div>
+		<dl>
+			<dt>ID</dt>
+			<dd id="id" th:text="${user.id}">123</dd>
+			<dt>UserName</dt>
+			<dd id="username" th:text="${user.username}">A short username...
+			</dd>
+			<dt>CreateDate</dt>
+			<dd id="createDate" th:text="${#calendars.format(user.createDate)}">
+				July 11, 2012 2:17:16 PM CDT</dd>
+			<dt>Password</dt>
+			<dd id="text" th:text="${user.password}">user password.</dd>
+		</dl>
+		
+		<div class="pull-left">
+			<a href="users" th:href="@{'/admin/user/delete/' + ${user.id}}">
+				delete </a> | <a href="form.html"
+				th:href="@{'/admin/user/modify/' + ${user.id}}"> modify </a>
+		</div>
+	</div>
+</body>
+</html>

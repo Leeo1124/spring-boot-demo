@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="utf-8" />
+		<title>OASIS信息管理系统</title>
+		<meta name="keywords" content="Bootstrap模版,Bootstrap模版下载,Bootstrap教程,Bootstrap中文" />
+		<meta name="description" content="站长素材提供Bootstrap模版,Bootstrap教程,Bootstrap中文翻译等相关Bootstrap插件下载" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link rel="stylesheet" th:href="@{/plug-in/ace/css/bootstrap.min.css}" href="../../plug-in/ace/css/bootstrap.min.css" />
+		<link rel="stylesheet" th:href="@{/plug-in/ace/css/font-awesome.min.css}" href="../../plug-in/ace/css/font-awesome.min.css" />
+
+		<!--[if IE 7]>
+		  <link rel="stylesheet" th:href="@{/plug-in/ace/css/font-awesome-ie7.min.css}" href="../../plug-in/ace/css/font-awesome-ie7.min.css" />
+		<![endif]-->
+
+		<!-- page specific plugin styles -->
+
+		<!-- ace styles -->
+
+		<link rel="stylesheet" th:href="@{/plug-in/ace/css/ace.min.css}" href="../../plug-in/ace/css/ace.min.css" />
+		<link rel="stylesheet" th:href="@{/plug-in/ace/css/ace-rtl.min.css}" href="../../plug-in/ace/css/ace-rtl.min.css" />
+		<link rel="stylesheet" th:href="@{/plug-in/ace/css/ace-skins.min.css}" href="../../plug-in/ace/css/ace-skins.min.css" />
+
+		<!--[if lte IE 8]>
+		  <link rel="stylesheet" th:href="@{/plug-in/ace/css/ace-ie.min.css}" href="../../plug-in/ace/css/ace-ie.min.css" />
+		<![endif]-->
+
+		<!-- inline styles related to this page -->
+
+		<!-- ace settings handler -->
+
+		<script th:src="@{/plug-in/ace/js/ace-extra.js}" src="../../plug-in/ace/js/ace-extra.js"></script>
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+		<!--[if lt IE 9]>
+		<script th:src="@{/plug-in/ace/js/html5shiv.js}" src="../../plug-in/ace/js/html5shiv.js"></script>
+		<script th:src="@{/plug-in/ace/js/respond.min.js}" src="../../plug-in/ace/js/respond.min.js"></script>
+		<![endif]-->
+		<script th:src="@{/plug-in/ace/js/jquery-2.0.3.min.js}" src="../../plug-in/ace/js/jquery-2.0.3.min.js"></script>
+	
+		<script th:src="@{/js/sidebar-menu.js}" src="../../js/sidebar-menu.js"></script>
+		<script th:src="@{/js/bootstrap-tab.js}" src="../../js/bootstrap-tab.js"></script>
+	</head>
+
+	<body>
+		<div th:substituteby="admin/layout/header :: navbar"></div>
+		
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				<a class="menu-toggler" id="menu-toggler" href="#">
+					<span class="menu-text"></span>
+				</a>
+
+				<div class="sidebar" id="sidebar">
+					<ul class="nav nav-list" id="menu"></ul>
+					<div class="sidebar-collapse" id="sidebar-collapse">
+						<i class="icon-double-angle-left" data-icon1="icon-double-angle-left"
+							data-icon2="icon-double-angle-right"></i>
+					</div>
+				</div>
+				
+				<div class="main-content"><div class="page-content">
+			         <div class="row">
+			           <div class="col-xs-12" style="padding:0px;">
+			             <ul class="nav nav-tabs" role="tablist">
+			               <li class="active"><a href="#Index" role="tab" data-toggle="tab">首页</a></li>
+			             </ul>
+			             <div class="tab-content" style="padding: 1px;">
+			               <div role="tabpanel" class="tab-pane active" id="Index">
+			               </div>
+			             </div>
+			           </div>
+			         </div>
+			       </div>
+			    </div>
+				<!--  
+				<div th:substituteby="admin/layout/settings :: settings"></div>
+				-->
+			</div><!-- /.main-container-inner -->
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="icon-double-angle-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+		<script type="text/javascript">
+		 window.jQuery || document.write("<script th:src='@{/plug-in/ace/js/jquery-1.10.2.min.js}' src='../../plug-in/ace/js/jquery-1.10.2.min.js'>"+"<"+"script>");
+		</script>
+		<![endif]-->
+
+		<script type="text/javascript">
+			if("ontouchend" in document) document.write("<script th:src='@{/plug-in/ace/js/jquery.mobile.custom.min.js}' src='../../plug-in/ace/js/jquery.mobile.custom.min.js'>"+"<"+"script>");
+		</script>
+		<script th:src="@{/plug-in/ace/js/bootstrap.min.js}" src="../../plug-in/ace/js/bootstrap.min.js"></script>
+		<script th:src="@{/plug-in/ace/js/typeahead-bs2.min.js}" src="../../plug-in/ace/js/typeahead-bs2.min.js"></script>
+
+		<!-- page specific plugin scripts -->
+
+		<!--[if lte IE 8]>
+		  <script src="../../plug-in/ace/js/excanvas.min.js"></script>
+		<![endif]-->
+
+		<script th:src="@{/plug-in/ace/js/jquery-ui-1.10.3.custom.min.js}" src="../../plug-in/ace/js/jquery-ui-1.10.3.custom.min.js"></script>
+		<script th:src="@{/plug-in/ace/js/jquery.ui.touch-punch.min.js}" src="../../plug-in/ace/js/jquery.ui.touch-punch.min.js"></script>
+		<script th:src="@{/plug-in/ace/js/jquery.slimscroll.min.js}" src="../../plug-in/ace/js/jquery.slimscroll.min.js"></script>
+		<script th:src="@{/plug-in/ace/js/jquery.easy-pie-chart.min.js}" src="../../plug-in/ace/js/jquery.easy-pie-chart.min.js"></script>
+		<script th:src="@{/plug-in/ace/js/jquery.sparkline.min.js}" src="../../plug-in/ace/js/jquery.sparkline.min.js"></script>
+		<script th:src="@{/plug-in/ace/js/flot/jquery.flot.min.js}" src="../../plug-in/ace/js/flot/jquery.flot.min.js"></script>
+		<script th:src="@{/plug-in/ace/js/flot/jquery.flot.pie.min.js}" src="../../plug-in/ace/js/flot/jquery.flot.pie.min.js"></script>
+		<script th:src="@{/plug-in/ace/js/flot/jquery.flot.resize.min.js}" src="../../plug-in/ace/js/flot/jquery.flot.resize.min.js"></script>
+
+		<!-- ace scripts -->
+
+		<script th:src="@{/plug-in/ace/js/ace-elements.min.js}" src="../../plug-in/ace/js/ace-elements.min.js"></script>
+		<script th:src="@{/plug-in/ace/js/ace.js}" src="../../plug-in/ace/js/ace.js"></script>
+
+		<!-- inline scripts related to this page -->
+
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			$(function() {
+				var userId = /*[[${session.user.id}]]*/ 1;
+				$('#menu').sidebarMenu({ url: "/admin/menu/"+userId});
+				/*
+				$('#menu').sidebarMenu({
+					data : [ {
+						id : '1',
+						name : '系统设置',
+						icon : 'icon-cog',
+						url : '',
+						childrens : [ {
+							id : '11',
+							name : '编码管理',
+							icon : 'icon-glass',
+							url : '/CodeType/Index'
+						} ]
+					}, {
+						id : '2',
+						name : '基础数据',
+						icon : 'icon-leaf',
+						url : '',
+						childrens : [ {
+							id : '21',
+							name : '基础特征',
+							icon : 'icon-glass',
+							url : '/BasicData/BasicFeature/Index'
+						}, {
+							id : '22',
+							name : '特征管理',
+							icon : 'icon-glass',
+							url : '/BasicData/Features/Index'
+						}, {
+							id : '23',
+							name : '物料维护',
+							icon : 'icon-glass',
+							url : '/Model/Index'
+						}, {
+							id : '24',
+							name : '站点管理',
+							icon : 'icon-glass',
+							url : '/Station/Index'
+						} ]
+					}, {
+						id : '3',
+						name : '权限管理',
+						icon : 'icon-user',
+						url : '',
+						childrens : [ {
+							id : '31',
+							name : '用户管理',
+							icon : 'icon-user',
+							url : '/SystemSetting/User'
+						}, {
+							id : '32',
+							name : '角色管理',
+							icon : 'icon-apple',
+							url : '/SystemSetting/Role'
+						}, {
+							id : '33',
+							name : '菜单管理',
+							icon : 'icon-list',
+							url : '/SystemSetting/Menu'
+						}, {
+							id : '34',
+							name : '部门管理',
+							icon : 'icon-glass',
+							url : '/SystemSetting/Department'
+						} ]
+					}, {
+						id : '4',
+						name : '订单管理',
+						icon : 'icon-envelope',
+						url : '',
+						childrens : [ {
+							id : '41',
+							name : '订单查询',
+							icon : 'icon-glass',
+							url : '/Order/Query'
+						}, {
+							id : '42',
+							name : '订单排产',
+							icon : 'icon-glass',
+							url : '/Order/PLANTPRODUCT'
+						}, {
+							id : '43',
+							name : '订单撤排',
+							icon : 'icon-glass',
+							url : '/Order/cancelPRODUCT'
+						}, {
+							id : '44',
+							name : '订单HOLD',
+							icon : 'icon-glass',
+							url : '/Order/hold'
+						}, {
+							id : '45',
+							name : '订单删除',
+							icon : 'icon-glass',
+							url : '/Order/delete'
+						}, {
+							id : '47',
+							name : '订单插单',
+							icon : 'icon-glass',
+							url : '/Order/insertorder'
+						}, {
+							id : '48',
+							name : '订单导入',
+							icon : 'icon-glass',
+							url : '/Order/Import'
+						} ]
+					} ]
+				});*/
+			});
+		/*]]>*/
+		</script>
+</body>
+</html>

@@ -17,7 +17,7 @@ public class Menu implements Serializable {
     // 父节点
  	private Menu parent = null;
 
-    private List<Menu> children = Lists.newArrayList();
+    private List<Menu> childrens = Lists.newArrayList();
 
     public Menu(Long id, String name, String icon, String url, Long parentId) {
         this.id = id;
@@ -59,12 +59,12 @@ public class Menu implements Serializable {
         this.url = url;
     }
 
-    public List<Menu> getChildren() {
-        return children;
+    public List<Menu> getChildrens() {
+        return childrens;
     }
 
-    public void setChildren(List<Menu> children) {
-        this.children = children;
+    public void setChildrens(List<Menu> childrens) {
+        this.childrens = childrens;
     }
     
     public Long getParentId() {
@@ -85,14 +85,14 @@ public class Menu implements Serializable {
 	
 	public void addChildren(Menu menu) {
     	menu.setParent(this); // 设置父节点
-		this.children.add(menu);
+		this.childrens.add(menu);
 	}
 
 	/**
      * @return
      */
     public boolean isHasChildren() {
-        return !getChildren().isEmpty();
+        return !getChildrens().isEmpty();
     }
 
     @Override
@@ -103,7 +103,7 @@ public class Menu implements Serializable {
                 ", name='" + name + '\'' +
                 ", icon='" + icon + '\'' +
                 ", url='" + url + '\'' +
-                ", children=" + children +
+                ", childrens=" + childrens +
                 '}';
     }
 }

@@ -3,7 +3,7 @@ var addTabs = function (options) {
   //var id = rand.substring(rand.indexOf('.') + 1);
   var url = window.location.protocol + '//' + window.location.host;
   options.url = url + options.url;
-  id = "tab_" + options.id;
+  var id = "tab_" + options.id;
   $(".active").removeClass("active");
   //如果TAB不存在，创建一个新的TAB
   if (!$("#" + id)[0]) {
@@ -24,8 +24,8 @@ var addTabs = function (options) {
           '" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="yes" allowtransparency="yes"></iframe></div>';
     }
     //加入TABS
-    $(".nav-tabs").append(title);
-    $(".tab-content").append(content);
+    $("section").children("ul.nav-tabs").append(title);
+    $("section.tab-content").append(content);
   }
   //激活TAB
   $("#tab_" + id).addClass('active');

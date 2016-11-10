@@ -15,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Lists;
 import com.leeo.common.entity.search.SearchOperator;
 import com.leeo.common.entity.search.Searchable;
 import com.leeo.common.repository.BaseRepository;
@@ -185,7 +184,7 @@ public class ResourceService extends BaseTreeableService<Resource, Long> {
         Menu root = convertToMenu(resources.remove(resources.size() - 1));
 
         recursiveMenu(root, resources);
-        List<Menu> menus = root.getChildren();
+        List<Menu> menus = root.getChildrens();
         removeNoLeafMenu(menus);
 
         return menus;
@@ -197,7 +196,7 @@ public class ResourceService extends BaseTreeableService<Resource, Long> {
         }
         for (int i = menus.size() - 1; i >= 0; i--) {
             Menu m = menus.get(i);
-            removeNoLeafMenu(m.getChildren());
+            removeNoLeafMenu(m.getChildrens());
             if (!m.isHasChildren() && StringUtils.isEmpty(m.getUrl())) {
                 menus.remove(i);
             }
@@ -208,12 +207,12 @@ public class ResourceService extends BaseTreeableService<Resource, Long> {
         for (int i = resources.size() - 1; i >= 0; i--) {
             Resource resource = resources.get(i);
             if (resource.getParentId().equals(menu.getId())) {
-                menu.getChildren().add(convertToMenu(resource));
+                menu.getChildrens().add(convertToMenu(resource));
                 resources.remove(i);
             }
         }
 
-        for (Menu subMenu : menu.getChildren()) {
+        for (Menu subMenu : menu.getChildrens()) {
             recursiveMenu(subMenu, resources);
         }
     }

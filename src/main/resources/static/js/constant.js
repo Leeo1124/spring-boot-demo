@@ -27,12 +27,17 @@ var CONSTANT = {
                         "sSortDescending": ": 以降序排列此列"
                     }
                 },
+                
+                lengthMenu: [ 1, 10, 25, 50, 75, 100 ],//定义在每页显示记录数的select中显示的选项
+                //bLengthChange: false,   //去掉每页显示多少条数据方法
+                
                 autoWidth: false,   //禁用自动调整列宽
                 stripeClasses: ["odd", "even"],//为奇偶行加上样式，兼容不支持CSS伪类的场合
                 order: [],          //取消默认排序查询,否则复选框一列会出现小箭头
                 processing: false,  //隐藏加载提示,自行处理
                 serverSide: true,   //启用服务器端分页
                 searching: false    //禁用原生搜索
+                
             },
             COLUMN: {
                 CHECKBOX: { //复选框单元格

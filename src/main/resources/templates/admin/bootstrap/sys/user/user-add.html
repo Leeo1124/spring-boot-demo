@@ -1,0 +1,76 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8" />
+<head th:include="admin/bootstrap/common/bootstrap2 :: bootstrap"
+	th:with="title='用户管理 - 用户列表'"></head>
+<body>
+	<div class="container">
+		<form class="form-horizontal" role="form">
+		<!--  
+		  <div class="form-group" style="margin-top: 10px;">
+		    <label for="username" class="col-sm-2 control-label">用户名：</label>
+		    <div class="col-sm-10">
+		    	<input type="text" class="form-control" id="username" placeholder="用户名">
+		  	</div>
+		  </div>
+		  <div class="form-group" style="margin-top: 10px;">
+		    <label for="password" class="col-sm-2 control-label">密码：</label>
+		    <div class="col-sm-10">
+		    	<input type="password" class="form-control" id="password" placeholder="密码">
+		  	</div>
+		  </div>
+		  <div class="form-group" style="margin-top: 10px;">
+		    <label for="email" class="col-sm-2 control-label">邮箱：</label>
+		    <div class="col-sm-10">
+		    	<input type="email" class="form-control" id="email" placeholder="邮箱">
+		  	</div>
+		  </div>
+		  <div class="form-group" style="margin-top: 10px;">
+		    <label for="mobilePhoneNumber" class="col-sm-2 control-label">电话：</label>
+		    <div class="col-sm-10">
+		    	<input type="text" class="form-control" id="mobilePhoneNumber" placeholder="电话">
+		  	</div>
+		  </div>
+		  <div class="form-group" style="margin-top: 10px;">
+		    <div class="col-sm-offset-2 col-sm-10">
+		      <div class="checkbox">
+			    <label>
+			      <input type="checkbox"> 是否管理员
+			    </label>
+			  </div>
+			 </div>
+		  </div>
+		  -->
+		  <table>
+		  	<tr height="40">
+				<td align="right">用户名：</td>
+				<td><input type="text" class="form-control" id="username" placeholder="用户名"></td>
+		  	</tr>
+		  	<tr height="40">
+				<td align="right">密码：</td>
+				<td><input type="password" class="form-control" id="password" placeholder="密码"></td>
+		  	</tr>
+		  	<tr height="40">
+				<td align="right">邮箱：</td>
+				<td><input type="email" class="form-control" id="email" placeholder="邮箱"></td>
+		  	</tr>
+		  	<tr height="40">
+				<td align="right">电话：</td>
+				<td><input type="text" class="form-control" id="mobilePhoneNumber" placeholder="电话"></td>
+		  	</tr>
+		  	<tr height="40">
+				<td></td>
+				<td>
+					<div class="checkbox">
+					    <label>
+					      <input type="checkbox"> 是否管理员
+					    </label>
+					</div>
+				</td>
+		  	</tr>
+		  </table>
+		</form>
+	</div>
+</body>
+</html>

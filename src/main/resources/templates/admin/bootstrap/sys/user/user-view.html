@@ -1,41 +1,64 @@
+<!DOCTYPE html >
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-	layout:decorate="admin/layout/layout">
-<head>
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <meta charset="utf-8" />
-<title>用户管理 - 创建用户</title>
-</head>
+<head th:include="admin/bootstrap/common/bootstrap2 :: bootstrap"
+	th:with="title='用户管理 - 用户列表'"></head>
 <body>
-	<div layout:fragment="header">
-		<h1>
-			用户管理 <small> <i class="icon-double-angle-right"></i> 创建用户
-			</small>
-		</h1>
-	</div>
-	<div layout:fragment="content">
-		<div class="alert alert-success" th:if="${globalMessage}"
-			th:text="${globalMessage}">Some Success user</div>
-		<div class="pull-right">
-			<a th:href="@{/admin/user}" href="list.html"> Users </a>
-		</div>
-		<dl>
-			<dt>ID</dt>
-			<dd id="id" th:text="${user.id}">123</dd>
-			<dt>UserName</dt>
-			<dd id="username" th:text="${user.username}">A short username...
-			</dd>
-			<dt>CreateDate</dt>
-			<dd id="createDate" th:text="${#calendars.format(user.createDate)}">
-				July 11, 2012 2:17:16 PM CDT</dd>
-			<dt>Password</dt>
-			<dd id="text" th:text="${user.password}">user password.</dd>
-		</dl>
-		
-		<div class="pull-left">
-			<a href="users" th:href="@{'/admin/user/delete/' + ${user.id}}">
-				delete </a> | <a href="form.html"
-				th:href="@{'/admin/user/modify/' + ${user.id}}"> modify </a>
-		</div>
-	</div>
+	<div class="block info-block" id="user-view">
+                    <div class="navbar navbar-inner block-header">
+                        <div class="block-title">用户详情</div>
+                        <div class="header-buttons">
+                            <button type="button" class="btn btn-primary" id="btn-view-edit">修改</button>
+                        </div>
+                    </div>
+                    <div class="block-content info-content clearfix">
+                        <div class="row-fluid">
+                            <div class="span4">
+                                <label class="prop-name">编号:</label>
+                                <div class="prop-value" id="extn-view"></div>
+                            </div>
+                            <div class="span4">
+                                <label class="prop-name">姓名:</label>
+                                <div class="prop-value" id="name-view"></div>
+                            </div>
+                            <div class="span4">
+                                <label class="prop-name">角色:</label>
+                                <div class="prop-value" id="role-view"></div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span4">
+                                <label class="prop-name">职位:</label>
+                                <div class="prop-value" id="position-view"></div>
+                            </div>
+                            <div class="span4">
+                                <label class="prop-name">薪水:</label>
+                                <div class="prop-value" id="salary-view"></div>
+                            </div>
+                            <div class="span4">
+                                <label class="prop-name">状态:</label>
+                                <div class="prop-value" id="status-view"></div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span4">
+                                <label class="prop-name">入职时间:</label>
+                                <div class="prop-value" id="start-date-view"></div>
+                            </div>
+                            <div class="span8">
+                                <label class="prop-name">办公地点:</label>
+                                <div class="prop-value" id="office-view"></div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <label class="prop-name">备注:</label>
+                                <div class="prop-value"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
 </body>
 </html>

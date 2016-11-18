@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="zh-CN"
+	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
 <meta charset="utf-8">
@@ -10,11 +11,11 @@
 <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">OASIS信息管理系统</title>
 
 <link rel="stylesheet"
-	th:href="@{/plug-in/bootstrap/3.3.0/css/bootstrap.min.css}"
-	href="../../plug-in/bootstrap/3.3.0/css/bootstrap.min.css" />
+	th:href="@{/plugins/bootstrap/3.3.0/css/bootstrap.min.css}"
+	href="../../plugins/bootstrap/3.3.0/css/bootstrap.min.css">
 <link rel="stylesheet"
-	th:href="@{/plug-in/font-awesome/4.2.0/css/font-awesome.min.css}"
-	href="../../plug-in/font-awesome/4.2.0/css/font-awesome.min.css">
+	th:href="@{/plugins/font-awesome/4.2.0/css/font-awesome.min.css}"
+	href="../../plugins/font-awesome/4.2.0/css/font-awesome.min.css">
 <link rel="stylesheet" th:href="@{/css/AdminLTE.css}"
 	href="../../css/AdminLTE.css">
 <link rel="stylesheet" th:href="@{/css/skins/_all-skins.css}"
@@ -33,6 +34,13 @@
 		    </section>
 		    <section class="content tab-content" style="padding:0 0 0 0;">
 			    <div role="tabpanel" class="tab-pane active" id="Index">
+				    <div class="container-fluid">
+				    	<br><br>
+				    	<div class="alert alert-warning alert-dismissible" role="alert">
+						  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						  <strong>Warning!</strong> Better check yourself, you're not looking too good.
+						</div>
+				    </div>
 				</div>
 		    </section>
 		</div>
@@ -41,14 +49,15 @@
 		<div class="control-sidebar-bg"></div>
 	</div>
 
-	<script th:src="@{/plug-in/jquery/2.2.0/jquery-2.2.0.min.js}"
-		src="../../plug-in/jquery/2.2.0/jquery-2.2.0.min.js"></script>
-	<script th:src="@{/plug-in/bootstrap/3.3.0/js/bootstrap.min.js}"
-		src="../../plug-in/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-	<script th:src="@{/plug-in/slimScroll/jquery.slimscroll.min.js}"
-		src="../../plug-in/slimScroll/jquery.slimscroll.min.js"></script>
+	<script th:src="@{/plugins/jquery/2.2.0/jquery-2.2.0.min.js}"
+		src="../../plugins/jquery/2.2.0/jquery-2.2.0.min.js"></script>
+	<script th:src="@{/plugins/bootstrap/3.3.0/js/bootstrap.min.js}"
+		src="../../plugins/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	<script th:src="@{/plugins/slimScroll/jquery.slimscroll.min.js}"
+		src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+	<script th:src="@{/plugins/layer/3.0/layer.js}" src="../../plugins/layer/3.0/layer.js"></script>
 	<script th:src="@{/js/app.js}" src="../../js/app.js"></script>
-	
+
 	<script th:src="@{/js/bootstrap-menu.js}" src="../../js/bootstrap-menu.js"></script>
 	<script th:src="@{/js/bootstrap-tab.js}" src="../../js/bootstrap-tab.js"></script>
 	<script th:inline="javascript">
@@ -56,12 +65,6 @@
 			$(function() {
 				var userId = /*[[${session.user.id}]]*/ 1;
 				$('#menu').sidebarMenu({ url: "/admin/menu/"+userId});
-				/*$('#menu li').on('click',function(){
-					debugger;
-					//$('#menu').children("li.active").removeClass("active");
-					alert($('#menu').children("li.active").html());
-					this.addClass('active');
-				});*/
 			});
 		/*]]>*/
 	</script>

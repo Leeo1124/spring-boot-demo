@@ -10,11 +10,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -59,6 +61,19 @@ public class UserControllerTests {
 		this.mockMvc.perform(post("/").param("username", "").param("password", ""))
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("is required")));
+	}
+	
+	@Test
+	public void list() throws Exception {
+		MvcResult mvcResult = this.mockMvc.perform(get("/admin/sys/user/query3")
+//				.param("page.pn", "1")
+//				.param("page.size", "1")
+//				.param("sort.id", "desc")
+				)
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andReturn();
+		System.out.println("--------: "+mvcResult.getResponse().getContentAsString());
 	}
 
 	private static class RegexMatcher extends TypeSafeMatcher<String> {

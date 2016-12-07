@@ -1,11 +1,38 @@
 package com.leeo.sys.user.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.base.Splitter;
+import com.google.common.primitives.Longs;
 import com.leeo.common.repository.BaseRepository;
 import com.leeo.common.service.BaseService;
 import com.leeo.common.utils.UserLogUtils;
@@ -16,9 +43,7 @@ import com.leeo.sys.user.exception.UserNotExistsException;
 import com.leeo.sys.user.exception.UserPasswordNotMatchException;
 import com.leeo.sys.user.repository.UserRepository;
 
-
 @Service
-@Transactional
 public class UserService extends BaseService<User, Long> {
 
     private UserRepository userRepository;
@@ -31,7 +56,76 @@ public class UserService extends BaseService<User, Long> {
         this.baseRepository = userRepository;
         this.userRepository = (UserRepository) userRepository;
     }
+    
+    public Page<User> findByDeletedFalse(Pageable pageable){
+    	return this.userRepository.findByDeletedFalse(pageable);
+    }
+    
+    //动态查找
+    public Page<User> findBySpec(Pageable pageable){
+    	final String username = "";
+    	final String ids = "";
+    	final String createDate_begin = "2016-11-08";
+    	final String createDate_end = "2016-11-10";
+    	final String status = "normal";
+    	final String admin = "0";
+    	return this.userRepository.findAll(new Specification<User>() {  
+            @Override  
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {  
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                //ID
+                if(StringUtils.isNotBlank(ids)){
+                	List<Long> idList = Arrays.asList(StringUtils.split(ids, ',')).stream()
+            				.filter(id -> NumberUtils.isNumber(id))
+            				.map(id -> Long.valueOf(id))
+            				.collect(Collectors.toList());
+                	predicates.add(root.<Long>get("id").in(idList));
+                }  
+                //用户名
+                if(StringUtils.isNotBlank(username)){  
+                	predicates.add(cb.like(root.<String>get("username"), username+"%"));  
+                } 
+                //用户状态
+                if(StringUtils.isNotBlank(status)){  
+                	predicates.add(cb.equal(root.<Enum<?>>get("status"), EnumUtils.getEnum(UserStatus.class, status)));  
+                }
+                //是否是管理员
+                if(StringUtils.isNotBlank(admin)){  
+                	predicates.add(cb.equal(root.<Boolean>get("admin"), BooleanUtils.toBoolean(admin)));  
+                } 
+                //日期
+                if(StringUtils.isNotBlank(createDate_begin) && StringUtils.isNotBlank(createDate_end)){  
+                	Date startDate = null;
+                	Date endDate = null;
+					try {
+						startDate = DateUtils.parseDate(createDate_begin, "yyyy-MM-dd");
+						endDate = DateUtils.parseDate(createDate_end, "yyyy-MM-dd");
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+                    predicates.add(cb.between(root.<Date>get("createDate"), startDate, endDate));  
+                }  
+                
+                predicates.add(cb.equal(root.<Boolean>get("deleted"), 0));
+                
+                return query.where(predicates.toArray(new Predicate[predicates.size()])).getRestriction();
+            }  
+  
+        }, pageable);
+    }
+    
+    public Page<User> findByExample(Pageable pageable){
+    	User user = new User();
+    	user.setUsername("hcy");
+    	ExampleMatcher matcher = ExampleMatcher.matching()     
+    			  .withIgnorePaths("username")
+    			  .withMatcher("username", match -> match.endsWith());
 
+    	Example<User> example = Example.of(user);
+    	
+    	return this.userRepository.findAll(example, pageable);
+    }
+    
     public User findByUsername(String username) {
         if(StringUtils.isEmpty(username)) {
             return null;

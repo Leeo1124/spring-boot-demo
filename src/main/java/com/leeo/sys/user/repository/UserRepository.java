@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.LockModeType;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -35,4 +37,6 @@ public interface UserRepository extends BaseRepository<User, Long>{
     User findByEmail(String email);
     
     User findByMobilePhoneNumber(String mobilePhoneNumber); 
+    
+    Page<User> findByDeletedFalse(Pageable pageable);
 }

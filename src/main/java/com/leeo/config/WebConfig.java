@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -29,7 +30,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(new PageableMethodArgumentResolver());
         argumentResolvers.add(new SearchableMethodArgumentResolver());
+//        argumentResolvers.add(new FormModelMethodArgumentResolver());
     }
+	
+//	@Override
+//    public void addFormatters(FormatterRegistry registry) {
+//        registry.addFormatterForFieldAnnotation(new TimestampFormatAnnotationFormatterFactory());
+//        super.addFormatters(registry);
+//    }
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {

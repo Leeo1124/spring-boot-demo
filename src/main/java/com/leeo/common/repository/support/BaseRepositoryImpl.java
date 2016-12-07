@@ -5,17 +5,20 @@ import static org.springframework.data.jpa.repository.query.QueryUtils.getQueryS
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import javax.persistence.Query;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.leeo.common.entity.LogicDeleteable;
@@ -140,5 +143,53 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
 	public long count(Searchable searchable) {
 		return repositoryHelper.count(countAllQL, searchable, searchCallback);
 	}
+	
+    public List<T> findAll(ID[] ids) {
+    	if (ArrayUtils.isEmpty(ids)) {
+    		return Collections.emptyList();
+		}
+		List<ID> idList = new ArrayList<ID>();
+		for (ID id : ids) {
+			idList.add(id);
+		}
+		
+		return findAll(idList);
+    }
+    
+    @SuppressWarnings("unchecked")
+	public List<T> findbySql(final String sql, final Object... objs) {
+		Query query = this.entityManager.createNativeQuery(sql, entityClass);
+		if (ArrayUtils.isNotEmpty(objs)) {
+			for (int i = 0; i < objs.length; i++) {
+				query.setParameter(i + 1, objs[i]);
+			}
+		}
+		
+		return query.getResultList();
+	}
+    
+//    @Transactional(readOnly = true)
+    @SuppressWarnings({ "hiding", "unchecked" })
+	public <T> List<T> findListbySql(final String sql, final Object... objs) {
+    	Query query = this.entityManager.createNativeQuery(sql);
+		if (ArrayUtils.isNotEmpty(objs)) {
+			for (int i = 0; i < objs.length; i++) {
+				query.setParameter(i + 1, objs[i]);
+			}
+		}
+		
+		return query.getResultList();
+    }
 
+//    @Transactional
+    public int executeSql(String sql, List<Object> values) {  
+        Query query = this.entityManager.createNativeQuery(sql);
+        if(CollectionUtils.isNotEmpty(values)){
+        	for (int i = 0; i < values.size(); i++) {  
+                query.setParameter(i + 1, values.get(i));  
+            }  
+        }
+        
+        return query.executeUpdate();  
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
 
 import com.leeo.common.repository.support.BaseRepositoryImpl;
@@ -42,7 +43,7 @@ public class SpringBootDemoApplication {
 	  public MethodInvokingFactoryBean methodInvokingFactoryBean() {
 		MethodInvokingFactoryBean methodInvokingFactoryBean = new MethodInvokingFactoryBean();
 		methodInvokingFactoryBean.setStaticMethod("com.leeo.common.entity.search.utils.SearchableConvertUtils.setConversionService");
-		methodInvokingFactoryBean.setArguments(new Object[] {new FormattingConversionService()});
+		methodInvokingFactoryBean.setArguments(new Object[] {new DefaultFormattingConversionService()});
 	    
 	    return methodInvokingFactoryBean;
 	  }

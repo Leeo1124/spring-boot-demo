@@ -1,4 +1,7 @@
 package com.leeo.sys.user.web.controller;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,13 +12,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -104,6 +112,21 @@ public class UserController {
 	    
 		return result;
 	}
+	
+	@GetMapping("/query3")
+	@ResponseBody
+	public Map<String, Object> query3(Model model,
+			HttpServletRequest request,
+			@PageableDefault(size = 10) Pageable pageable) {
+	    
+	    Page<User> users = this.userService.findByExample(pageable);
+	    logger.info("users : " + users.getContent());
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("pageData", users.getContent());
+	    result.put("total", users.getTotalElements());
+	    
+		return result;
+	}
 
 	@GetMapping("{id}/{operation}")
 	public ModelAndView view(@PathVariable("id") User user, @PathVariable("operation")String operation) {
@@ -143,4 +166,9 @@ public class UserController {
 		return new ModelAndView(path+"sys/user/user-form", "user", user);
 	}
 
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+	}
 }

@@ -50,6 +50,7 @@ body {
 </head>
 <body>
 	<div class="container">
+			<!--  
 			<form class="form-signin" role="form" th:action="@{/login}" th:object="${user}" action="#" method="post" onsubmit="return checkUser();">
 				<h2 class="form-signin-heading">
 					OASIS信息管理系统
@@ -81,6 +82,27 @@ body {
 		        </div>
 				<button id="but_login" class="btn btn-lg btn-primary btn-block" type="submit">登&nbsp;&nbsp;录</button>
 			</form>
+			-->
+			<!--  -->
+			<form class="form-inline" role="form">
+				<div class="input-group input-group-lg">
+				  <span class="input-group-addon">电话</span>
+				  <input id="phone" name="phone" type="text" class="form-control" placeholder="电话">
+				</div>
+				<div class="input-group input-group-lg">
+					<button class="btn btn-lg btn-primary" type="button" onclick="login();">登&nbsp;&nbsp;录</button>
+				</div>
+				<div class="input-group input-group-lg">
+					<button class="btn btn-lg btn-primary" type="button" onclick="logout();">登&nbsp;&nbsp;出</button>
+				</div>
+				<div class="input-group input-group-lg">
+					<button class="btn btn-lg btn-primary" type="button" onclick="call();">拨&nbsp;&nbsp;号</button>
+				</div>
+				<div class="input-group input-group-lg">
+					<button class="btn btn-lg btn-primary" type="button" onclick="hangup();">挂&nbsp;&nbsp;断</button>
+				</div>
+			</form>
+			
 	</div>
 <script th:src="@{/plugins/jquery/2.2.0/jquery-2.2.0.min.js}" src="../../plugins/jquery/2.2.0/jquery-2.2.0.min.js"></script>
 <script type="text/javascript">
@@ -143,5 +165,83 @@ function hideTop() {
 	});
 }
 </script>
+<!-- -->
+<script type="text/javascript" src="http://open.ccod.com:20000/WAEX/WA.js"></script>
+<script type="text/javascript">
+$(function (){
+	console.log("---- init being ----");
+	//WA.init();
+	
+	WA.init({
+	    ui: true,
+	    callback: function() {
+	    	WA.registerEventHandler(function(data) {
+				if(data.type=="EVENT_WEBAGENT_LOGIN"){
+					console.log("----登录成功："+JSON.stringify(data));
+				}else if(data.type=="EVENT_WEBAGENT_LOGIN_FAIL"){
+					console.log("----登录失败："+JSON.stringify(data));
+				}else if(data.type=="EVENT_WEBAGENT_LOGOUT"){
+					console.log("----登出成功："+JSON.stringify(data));
+				}else if(data.type=="EVENT_WEBAGENT_LOGOUT_FAIL"){
+					console.log("----登出失败："+JSON.stringify(data));
+				}else if(data.type=="EVENT_SERVER_DESCONNECTED"){
+					console.log("----服务连接失败事件："+JSON.stringify(data));
+				}else{
+					console.log("---- aaa："+JSON.stringify(data));
+				}
+			});
+	    	WA.registerResultHandler(function(data) {
+	    		if(data.type=="autoLogin" && data.code=="000"){
+					console.log("----自动登录成功："+JSON.stringify(data));
+				}else{
+					console.log("----自动登录失败："+JSON.stringify(data));
+				}
+	    	});
+	    	
+	    	//logout();
+
+	    }
+	});
+	
+	
+	console.log("---- init end ----");
+});
+
+function login(){
+	console.log("---- login being ----");
+	 var result = WA.extend.login({
+		entId : "0101290083",
+		agentId : "25782413",
+		agentPassword : "25782413",
+		isForce : true
+	  });
+	 console.log("---- login result：" + JSON.stringify(result));
+	console.log("---- login end ----");
+}
+
+function logout(){
+	console.log("---- logout being ----");
+	var result = WA.extend.logout();
+	console.log("---- logout result：" + JSON.stringify(result));
+	console.log("---- logout end ----");
+}
+
+function call(){
+	console.log("---- call being ----");
+	var result = WA.extend.makeCall({
+    	outCallNumber: $.trim($("#phone").val()),
+	});
+	console.log("---- call result：" + JSON.stringify(result));
+	console.log("---- call end ----");
+}
+
+function hangup(){
+	console.log("---- hangup being ----");
+	var result = WA.extend.hangup();
+	console.log("---- hangup result：" + JSON.stringify(result));
+	console.log("---- hangup end ----");
+}
+</script>
+
 </body>
 </html>

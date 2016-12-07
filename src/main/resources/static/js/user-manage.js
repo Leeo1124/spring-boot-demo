@@ -1,7 +1,7 @@
 $(function (){
     $(".form_datetime").datetimepicker({
     	minView: "month",//选择日期后，不会再跳转去选择时分秒
-        format: "yyyy-MM-dd",
+        format: "yyyy-MM-dd HH:mm:ss",
         autoclose: true,//选择日期后自动关闭 
         todayBtn: true,
         pickerPosition: "bottom-left",
@@ -27,7 +27,7 @@ $(function (){
             var param = userManage.getQueryCondition(data);
             $.ajax({
                     type: "GET",
-                    url: "/admin/sys/user/query2",
+                    url: "/admin/sys/user/query3",
                     cache : false,  //禁用缓存
                     data: param,    //传入已封装的参数
                     dataType: "json",
@@ -192,8 +192,8 @@ var userManage = {
         var orderColumn = "";
         var orderDir = "";
         //组装分页参数
-        param += "page_pn=" + data.start;
-        param += "&page_size=" + data.length;
+        param += "page.pn=" + (parseInt(data.start) + 1);
+        param += "&page.size=" + data.length;
         
         //组装排序参数
         if (data.order && data.order.length && data.order[0]) {
@@ -226,7 +226,6 @@ var userManage = {
         		param += "&" + $.trim(field.name) + "=" + val;
         	}
         });
-        alert(param);
  
         return param;
     },

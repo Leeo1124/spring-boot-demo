@@ -6,12 +6,14 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 import com.leeo.common.entity.AbstractEntity;
 import com.leeo.common.entity.search.Searchable;
 import com.leeo.common.repository.BaseRepository;
 
+@Transactional(readOnly = true)
 public abstract class BaseService<T extends AbstractEntity<?>, ID extends Serializable> {
 
 	protected BaseRepository<T, ID> baseRepository;
@@ -24,10 +26,12 @@ public abstract class BaseService<T extends AbstractEntity<?>, ID extends Serial
      * @param t 实体
      * @return 返回保存的实体
      */
+    @Transactional
     public T save(T t) {
         return baseRepository.save(t);
     }
 
+    @Transactional
     public T saveAndFlush(T t) {
         t = save(t);
         baseRepository.flush();
@@ -40,6 +44,7 @@ public abstract class BaseService<T extends AbstractEntity<?>, ID extends Serial
      * @param t 实体
      * @return 返回更新的实体
      */
+    @Transactional
     public T update(T t) {
         return baseRepository.save(t);
     }
@@ -49,6 +54,7 @@ public abstract class BaseService<T extends AbstractEntity<?>, ID extends Serial
      *
      * @param id 主键
      */
+    @Transactional
     public void delete(ID id) {
         baseRepository.delete(id);
     }
@@ -58,6 +64,7 @@ public abstract class BaseService<T extends AbstractEntity<?>, ID extends Serial
      *
      * @param t 实体
      */
+    @Transactional
     public void delete(T t) {
         baseRepository.delete(t);
     }
@@ -67,10 +74,10 @@ public abstract class BaseService<T extends AbstractEntity<?>, ID extends Serial
      *
      * @param ids 实体
      */
+    @Transactional
     public void delete(ID[] ids) {
         baseRepository.delete(ids);
     }
-
 
     /**
      * 按照主键查询
@@ -100,7 +107,7 @@ public abstract class BaseService<T extends AbstractEntity<?>, ID extends Serial
     public long count() {
         return baseRepository.count();
     }
-
+    
     /**
      * 查询所有实体
      *
@@ -109,6 +116,26 @@ public abstract class BaseService<T extends AbstractEntity<?>, ID extends Serial
     public List<T> findAll() {
         return baseRepository.findAll();
     }
+    
+    /**
+     * 根据主键查询相应实体
+     *
+     * @param ids
+     * @return
+     */
+    public List<T> findAll(ID[] ids) {
+    	return this.baseRepository.findAll(ids);
+    }
+    
+    /**
+     * 根据主键查询相应实体
+     *
+     * @param ids
+     * @return
+     */
+    public List<T> findAll(Iterable<ID> ids) {
+    	return this.baseRepository.findAll(ids);
+    } 
 
     /**
      * 按照顺序查询所有实体
@@ -171,5 +198,29 @@ public abstract class BaseService<T extends AbstractEntity<?>, ID extends Serial
      */
     public Long count(Searchable searchable) {
         return baseRepository.count(searchable);
+    }
+    
+    /**
+     * 
+    * @Title: findbySql
+    * @Description: 通过sql查询语句查找对象
+    * @param @param sql
+    * @param @param objs
+    * @param @return    参数
+    * @return List<T>    返回类型
+    * @throws
+     */
+    public List<T> findbySql(final String sql, final Object... objs) {
+    	return this.baseRepository.findbySql(sql, objs);
+    }
+    
+    @SuppressWarnings("hiding")
+	public <T> List<T> findListbySql(final String sql, final Object... objs) {
+    	return this.baseRepository.findListbySql(sql, objs);
+    }
+    
+    @Transactional
+    public int executeSql(String sql, List<Object> values) {
+    	return this.baseRepository.executeSql(sql, values);
     }
 }

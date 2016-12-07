@@ -133,6 +133,12 @@
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-parameter-names</artifactId>
 		</dependency>
+		<!-- guava -->
+		<dependency>
+		    <groupId>com.google.guava</groupId>
+		    <artifactId>guava</artifactId>
+		    <version>20.0</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -155,5 +161,33 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<redis.cluster.node.0>10.255.33.29:9001</redis.cluster.node.0>
+				<redis.cluster.node.1>10.255.33.29:9002</redis.cluster.node.1>
+				<redis.cluster.node.2>10.255.33.29:9003</redis.cluster.node.2>
+				<redis.cluster.node.3>10.255.33.29:9004</redis.cluster.node.3>
+				<redis.cluster.node.4>10.255.33.29:9005</redis.cluster.node.4>
+				<redis.cluster.node.5>10.255.33.29:9006</redis.cluster.node.5>
+			</properties>
+		</profile>
+		<profile>
+			<id>sa</id>
+			<properties>
+				<redis.cluster.node.0>#{redis.cluster.node.0}</redis.cluster.node.0>
+				<redis.cluster.node.1>#{redis.cluster.node.1}</redis.cluster.node.1>
+				<redis.cluster.node.2>#{redis.cluster.node.2}</redis.cluster.node.2>
+				<redis.cluster.node.3>#{redis.cluster.node.3}</redis.cluster.node.3>
+				<redis.cluster.node.4>#{redis.cluster.node.4}</redis.cluster.node.4>
+				<redis.cluster.node.5>#{redis.cluster.node.5}</redis.cluster.node.5>
+			</properties>
+		</profile>
+	</profiles>
 
 </project>

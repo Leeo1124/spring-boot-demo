@@ -43,7 +43,7 @@ public class RedisService {
 	}
 
 	public boolean set(final String key, final String value, final long expirationTime, final TimeUnit unit) {
-		return this.set(key, value, expirationTime, unit);
+		return this.set(key, value, expirationTime, unit, SetOption.SET_IF_ABSENT);
 	}
 
 	public boolean set(final String key, final String value, final long expirationTime, final TimeUnit unit,

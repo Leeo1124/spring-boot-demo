@@ -34,12 +34,18 @@ public class RedisTests {
 	}
 
 	@Test
-	public void hash() {
-		String data = (String) this.redisTemplate.opsForHash().get("tasklock", "1");
+	public void hash_set() {
+		String data = (String) this.redisTemplate.opsForHash().get("task.hash", "date");
 		System.out.println("----:" + data);
 		if (StringUtils.isBlank(data)) {
-			this.redisTemplate.opsForHash().put("tasklock", "1", new Date());
+			this.redisTemplate.opsForHash().put("task.hash", "date", new Date());
 		}
+	}
+	
+	@Test
+	public void hash_del() {
+		long data = this.redisTemplate.opsForHash().delete("task.hash", "date");
+		System.out.println("----:" + data);
 	}
 
 	@Test

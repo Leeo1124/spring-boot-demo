@@ -1,6 +1,9 @@
 package com.leeo.lock;
 
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -10,6 +13,7 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisStringCommands.SetOption;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Service;
 
 import redis.clients.jedis.Protocol;
@@ -23,6 +27,8 @@ public class RedisService {
 
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
+	@Resource(name = "ratelimiter")
+    RedisScript<Boolean> ratelimiter;
 
 	public boolean set(final String key) {
 		long value = System.currentTimeMillis();
@@ -137,6 +143,49 @@ public class RedisService {
 		this.logger.info("将{}中储存的数字值减一,返回值为 : {}.", key, result);
 
 		return result;
+	}
+
+	public long listPush(final String key, final String value, int permits) {
+		logger.info("key: {}, value: {}", key, value);
+		return this.redisTemplate.execute(new RedisCallback<Long>() {
+			public Long doInRedis(RedisConnection connection) {
+				long result = 0;
+				byte[] k = redisTemplate.getStringSerializer().serialize(key);
+				long current = connection.lLen(k);
+				logger.info("current value : " + current);
+				if (current >= permits) {
+					logger.info("too many requests");
+				} else {
+					byte[] v = redisTemplate.getStringSerializer().serialize(value);
+					if (!connection.exists(k)) {
+						// connection.multi();
+						result = connection.rPush(k, v);
+						// connection.exec();
+					} else {
+						result = connection.rPushX(k, v);
+					}
+				}
+
+				return result;
+			}
+		});
+	}
+
+	public String lPop(final String key) {
+		return this.redisTemplate.execute(new RedisCallback<String>() {
+			public String doInRedis(RedisConnection connection) {
+				byte[] k = redisTemplate.getStringSerializer().serialize(key);
+				return redisTemplate.getStringSerializer().deserialize(connection.lPop(k));
+			}
+		});
+	}
+	
+	public boolean execute(final String key, final String value, final int permits) {
+		return this.redisTemplate.execute(ratelimiter, this.redisTemplate.getStringSerializer(), null, Collections.singletonList(key), value, String.valueOf(permits));
+	}
+	
+	public boolean execute(final String key, final String value, final int permits, final long expireTime) {
+		return this.redisTemplate.execute(ratelimiter, this.redisTemplate.getStringSerializer(), null, Collections.singletonList(key), value, String.valueOf(permits), String.valueOf(expireTime));
 	}
 
 }

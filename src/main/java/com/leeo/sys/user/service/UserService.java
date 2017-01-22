@@ -1,38 +1,34 @@
 package com.leeo.sys.user.service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.base.Splitter;
-import com.google.common.primitives.Longs;
 import com.leeo.common.repository.BaseRepository;
 import com.leeo.common.service.BaseService;
 import com.leeo.common.utils.UserLogUtils;
@@ -45,6 +41,7 @@ import com.leeo.sys.user.repository.UserRepository;
 
 @Service
 public class UserService extends BaseService<User, Long> {
+	private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private UserRepository userRepository;
     @Autowired
@@ -126,7 +123,9 @@ public class UserService extends BaseService<User, Long> {
     	return this.userRepository.findAll(example, pageable);
     }
     
+    @Cacheable(value = "userCache", keyGenerator = "wiselyKeyGenerator")
     public User findByUsername(String username) {
+    	this.logger.info("无缓存时，查询用户信息。");
         if(StringUtils.isEmpty(username)) {
             return null;
         }

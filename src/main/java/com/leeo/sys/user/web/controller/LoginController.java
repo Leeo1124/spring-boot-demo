@@ -98,6 +98,15 @@ public class LoginController {
 //	        }
 			
 			retryCount = null == redisCache.get(retryCountCache)? 0 : redisCache.get(retryCountCache);
+			if (retryCount.intValue() >= maxRetryCount) {
+                UserLogUtils.log(
+                        username,
+                        "passwordError",
+                        "password error, retry limit exceed! password: {},max retry count {}",
+                        password, maxRetryCount);
+//                throw new UserPasswordRetryLimitExceedException(maxRetryCount);
+                throw new LockedAccountException();
+            }
 			
 			// 在调用了login方法后,SecurityManager会收到AuthenticationToken,并将其发送给已配置的Realm执行必须的认证检查
 			// 每个Realm都能在必要时对提交的AuthenticationTokens作出反应
@@ -108,15 +117,6 @@ public class LoginController {
 		        currentUser.login(token);
 				logger.info("对用户[" + username + "]进行登录验证..验证通过");
 	
-				if (retryCount.intValue() >= maxRetryCount) {
-	                UserLogUtils.log(
-	                        username,
-	                        "passwordError",
-	                        "password error, retry limit exceed! password: {},max retry count {}",
-	                        password, maxRetryCount);
-	//                throw new UserPasswordRetryLimitExceedException(maxRetryCount);
-	                throw new LockedAccountException();
-	            }
 				redisCache.remove(retryCountCache);
 				logger.info("用户[" + username + "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
 				Session session = currentUser.getSession(false);

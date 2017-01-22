@@ -31,7 +31,7 @@ public class UserServiceTests {
 	@Test
 	public void findAll() {
 		Iterable<User> users = this.userService.findAll();
-		assertThat(users).hasSize(0);
+		assertThat(users).hasSize(5);
 	}
 	
 	@Test
@@ -64,6 +64,13 @@ public class UserServiceTests {
 		List<BigInteger> users = this.userService.findListbySql(sql, 0);
 		users.stream().forEach(user -> System.out.println(user));
 		assertThat(users).hasSize(5);
+	}
+	
+	@Test
+	public void update() {
+		User user = this.userService.findOne(1l);
+//		user.setEmail("hcy@163.com");
+//		this.userService.update(user);
 	}
 	
 	@Test

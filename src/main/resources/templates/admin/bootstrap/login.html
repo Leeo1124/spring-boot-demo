@@ -50,7 +50,7 @@ body {
 </head>
 <body>
 	<div class="container">
-			<!--  
+			<!--  -->
 			<form class="form-signin" role="form" th:action="@{/login}" th:object="${user}" action="#" method="post" onsubmit="return checkUser();">
 				<h2 class="form-signin-heading">
 					OASIS信息管理系统
@@ -82,8 +82,8 @@ body {
 		        </div>
 				<button id="but_login" class="btn btn-lg btn-primary btn-block" type="submit">登&nbsp;&nbsp;录</button>
 			</form>
-			-->
-			<!--  -->
+			
+			<!--  
 			<form class="form-inline" role="form">
 				<div class="input-group input-group-lg">
 				  <span class="input-group-addon">电话</span>
@@ -102,7 +102,7 @@ body {
 					<button class="btn btn-lg btn-primary" type="button" onclick="hangup();">挂&nbsp;&nbsp;断</button>
 				</div>
 			</form>
-			
+			-->
 	</div>
 <script th:src="@{/plugins/jquery/2.2.0/jquery-2.2.0.min.js}" src="../../plugins/jquery/2.2.0/jquery-2.2.0.min.js"></script>
 <script type="text/javascript">
@@ -165,7 +165,7 @@ function hideTop() {
 	});
 }
 </script>
-<!-- -->
+<!-- 
 <script type="text/javascript" src="http://open.ccod.com:20000/WAEX/WA.js"></script>
 <script type="text/javascript">
 $(function (){
@@ -211,8 +211,9 @@ function login(){
 	console.log("---- login being ----");
 	 var result = WA.extend.login({
 		entId : "0101290083",
-		agentId : "25782413",
-		agentPassword : "25782413",
+		agentId : "25782412",
+		agentPassword : "25782412",
+		agentNumber : "25782412",
 		isForce : true
 	  });
 	 console.log("---- login result：" + JSON.stringify(result));
@@ -237,11 +238,11 @@ function call(){
 
 function hangup(){
 	console.log("---- hangup being ----");
-	var result = WA.extend.hangup();
+	var result = WA.extend.reset();
 	console.log("---- hangup result：" + JSON.stringify(result));
 	console.log("---- hangup end ----");
 }
 </script>
-
+-->
 </body>
 </html>

@@ -1,60 +1,114 @@
-//package com.leeo.config;
-//
-//import com.fasterxml.jackson.annotation.JsonAutoDetect;  
-//import com.fasterxml.jackson.annotation.PropertyAccessor;  
-//import com.fasterxml.jackson.databind.ObjectMapper;  
-//import org.springframework.cache.CacheManager;  
-//import org.springframework.cache.annotation.CachingConfigurerSupport;  
-//import org.springframework.cache.annotation.EnableCaching;  
-//import org.springframework.cache.interceptor.KeyGenerator;  
-//import org.springframework.context.annotation.Bean;  
-//import org.springframework.context.annotation.Configuration;  
-//import org.springframework.data.redis.cache.RedisCacheManager;  
-//import org.springframework.data.redis.connection.RedisConnectionFactory;  
-//import org.springframework.data.redis.core.RedisTemplate;  
-//import org.springframework.data.redis.core.StringRedisTemplate;  
-//import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;  
-//  
-//import java.lang.reflect.Method;  
-//
-//@Configuration  
-//@EnableCaching  
-//public class RedisConfig extends CachingConfigurerSupport{  
-//  
-//    @Bean  
-//    public KeyGenerator wiselyKeyGenerator(){  
-//        return new KeyGenerator() {  
-//            @Override  
-//            public Object generate(Object target, Method method, Object... params) {  
-//                StringBuilder sb = new StringBuilder();  
-//                sb.append(target.getClass().getName());  
-//                sb.append(method.getName());  
-//                for (Object obj : params) {  
-//                    sb.append(obj.toString());  
-//                }  
-//                return sb.toString();  
-//            }  
-//        };  
-//  
-//    }  
-//  
-//    @Bean  
-//    public CacheManager cacheManager(  
-//            @SuppressWarnings("rawtypes") RedisTemplate redisTemplate) {  
-//        return new RedisCacheManager(redisTemplate);  
-//    }  
-//  
-//    @Bean  
-//    public RedisTemplate<String, String> redisTemplate(  
-//            RedisConnectionFactory factory) {  
-//        StringRedisTemplate template = new StringRedisTemplate(factory);  
-//        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);  
-//        ObjectMapper om = new ObjectMapper();  
-//        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);  
-//        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);  
-//        jackson2JsonRedisSerializer.setObjectMapper(om);  
-//        template.setValueSerializer(jackson2JsonRedisSerializer);  
-//        template.afterPropertiesSet();  
-//        return template;  
-//    }  
-//}  
+package com.leeo.config;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Cluster;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import redis.clients.jedis.JedisPoolConfig;
+
+/**
+ * redis 配置
+ *
+ */
+@Configuration
+public class RedisConfig {
+
+	private static final Logger logger = LoggerFactory.getLogger(RedisConfig.class);
+
+	@Autowired
+	private RedisProperties redisProperties;
+
+	/**
+	 * jedis 配置
+	 * 
+	 * @return
+	 */
+	@Bean
+	public JedisPoolConfig jedisPoolConfig() {
+		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+		RedisProperties.Pool pool = this.redisProperties.getPool();
+		jedisPoolConfig.setMaxTotal(pool.getMaxActive());
+		jedisPoolConfig.setMaxIdle(pool.getMaxIdle());
+		jedisPoolConfig.setMinIdle(pool.getMinIdle());
+		jedisPoolConfig.setMaxWaitMillis(pool.getMaxWait());
+		jedisPoolConfig.setTestOnBorrow(true);
+		jedisPoolConfig.setTestWhileIdle(true);
+
+		return jedisPoolConfig;
+	}
+
+	/**
+	 * 集群配置
+	 * 
+	 * @return
+	 */
+	@Bean
+	public RedisClusterConfiguration redisClusterConfiguration() {
+		if (this.redisProperties.getCluster() == null) {
+			return null;
+		}
+		Cluster clusterProperties = this.redisProperties.getCluster();
+		RedisClusterConfiguration config = new RedisClusterConfiguration(clusterProperties.getNodes());
+
+		if (clusterProperties.getMaxRedirects() != null) {
+			config.setMaxRedirects(clusterProperties.getMaxRedirects());
+		}
+
+		return config;
+	}
+
+	/**
+	 * redis服务器中心
+	 * 
+	 * @return
+	 */
+	@Bean
+	public JedisConnectionFactory jedisConnectionFactory(JedisPoolConfig jedisPoolConfig,
+			RedisClusterConfiguration redisClusterConfiguration) {
+		JedisConnectionFactory jedisConnectionFactory = null;
+		if (null != redisClusterConfiguration) {
+			jedisConnectionFactory = new JedisConnectionFactory(redisClusterConfiguration);
+		} else {
+			jedisConnectionFactory = new JedisConnectionFactory();
+		}
+
+		jedisConnectionFactory.setPoolConfig(jedisPoolConfig);
+		jedisConnectionFactory.setPort(this.redisProperties.getPort());
+		jedisConnectionFactory.setHostName(this.redisProperties.getHost());
+		if (this.redisProperties.getDatabase() > 0) {
+			jedisConnectionFactory.setDatabase(this.redisProperties.getDatabase());
+		}
+		if (StringUtils.isNotBlank(this.redisProperties.getPassword())) {
+			jedisConnectionFactory.setPassword(this.redisProperties.getPassword());
+		}
+		if (this.redisProperties.getTimeout() > 0) {
+			jedisConnectionFactory.setTimeout(this.redisProperties.getTimeout());
+		}
+
+		return jedisConnectionFactory;
+	}
+
+	@Bean
+	public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
+		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+		redisTemplate.setConnectionFactory(jedisConnectionFactory);
+		redisTemplate.setKeySerializer(new StringRedisSerializer());
+//		redisTemplate.setValueSerializer(new StringRedisSerializer());
+		// redisTemplate.setValueSerializer(new
+		// JdkSerializationRedisSerializer());
+		//开启事务
+		redisTemplate.setEnableTransactionSupport(true);
+
+		return redisTemplate;
+	}
+
+}

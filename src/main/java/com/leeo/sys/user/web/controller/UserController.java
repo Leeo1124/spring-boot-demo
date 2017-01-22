@@ -118,6 +118,7 @@ public class UserController {
 	public Map<String, Object> query3(Model model,
 			HttpServletRequest request,
 			@PageableDefault(size = 10) Pageable pageable) {
+		System.out.println("----:"+request);
 	    
 	    Page<User> users = this.userService.findByExample(pageable);
 	    logger.info("users : " + users.getContent());

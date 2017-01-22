@@ -46,7 +46,7 @@ public abstract class BaseService<T extends AbstractEntity<?>, ID extends Serial
      */
     @Transactional
     public T update(T t) {
-        return baseRepository.save(t);
+        return baseRepository.saveAndFlush(t);
     }
 
     /**
